@@ -4,7 +4,7 @@ using ThAmCo.Orders.Api.Data;
 
 namespace ThAmCo.Orders.Api.Controllers {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class OrdersController : ControllerBase {
 
         private readonly ILogger<OrdersController> _logger;
