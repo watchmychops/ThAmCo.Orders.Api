@@ -17,7 +17,7 @@ namespace ThAmCo.Orders.Api.Controllers {
         }
 
         [HttpGet(Name = "GetOrders")]
-        [Authorize("read:orders")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Order>>> Get() {
             return await _orderContext.Orders.ToListAsync();
         }
