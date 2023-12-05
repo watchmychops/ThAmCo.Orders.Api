@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Orders.Api.Data;
@@ -16,11 +17,13 @@ namespace ThAmCo.Orders.Api.Controllers {
         }
 
         [HttpGet(Name = "GetOrders")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Order>>> Get() {
             return await _orderContext.Orders.ToListAsync();
         }
 
         [HttpGet("{id}", Name = "GetOrder")]
+        [Authorize]
         public async Task<ActionResult<Order>> Get(int id) {
             var order = await _orderContext.FindAsync<Order>(id);
 
