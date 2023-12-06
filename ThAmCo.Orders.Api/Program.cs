@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
-using ThAmCo.Orders.Api.Authentication;
 using ThAmCo.Orders.Api.Data;
 
 namespace ThAmCo.Orders.Api
@@ -34,7 +33,6 @@ namespace ThAmCo.Orders.Api
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             builder.Services.AddDbContext<OrderContext>(options =>
             {
                 if (builder.Environment.IsDevelopment())
@@ -89,8 +87,8 @@ namespace ThAmCo.Orders.Api
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 
