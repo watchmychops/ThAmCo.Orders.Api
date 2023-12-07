@@ -76,7 +76,7 @@ namespace ThAmCo.Orders.Api.Tests {
 
         [Fact]
         public async Task GetOrder_WithInvalidId_ReturnsNotFound() {
-            var testId = -1;
+            var testId = 1;
 
             using (var context = CreateContext()) {
                 var controller = new OrdersController(null, context);
