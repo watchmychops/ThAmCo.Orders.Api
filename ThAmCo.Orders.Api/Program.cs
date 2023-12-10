@@ -1,59 +1,42 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Security.Claims;
 using ThAmCo.Orders.Api.Data;
 
-namespace ThAmCo.Orders.Api
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
+namespace ThAmCo.Orders.Api {
+    public class Program {
+        public static void Main(string[] args) {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("read:orders", policy => policy.Requirements.Add(new HasScopeRequirement("read:orders", domain)));
-            //});
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
+                .AddJwtBearer(options => {
                     options.Authority = builder.Configuration["Auth:Authority"];
                     options.Audience = builder.Configuration["Auth:Audience"];
                 });
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddDbContext<OrderContext>(options =>
-            {
-                if (builder.Environment.IsDevelopment())
-                {
+            builder.Services.AddDbContext<OrderContext>(options => {
+                if (builder.Environment.IsDevelopment()) {
                     var folder = Environment.SpecialFolder.LocalApplicationData;
                     var path = Environment.GetFolderPath(folder);
-                    var dbPath = System.IO.Path.Join(path, "orders.db");
+                    var dbPath = Path.Join(path, "orders.db");
                     options.UseSqlite($"Data Source={dbPath}");
                     options.EnableDetailedErrors();
                     options.EnableSensitiveDataLogging();
-                } else
-                {
+                } else {
                     var cs = builder.Configuration.GetConnectionString("OrderContext");
                     options.UseSqlServer(cs);
                 }
             });
 
-            builder.Services.AddSwaggerGen(option =>
-            {
-                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-                {
+            builder.Services.AddSwaggerGen(option => {
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme() {
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",

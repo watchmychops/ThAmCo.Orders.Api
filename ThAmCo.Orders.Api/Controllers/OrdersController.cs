@@ -32,8 +32,6 @@ namespace ThAmCo.Orders.Api.Controllers {
             return order;
         }
 
-
-
         [HttpPost(Name = "AddOrder")]
         [Authorize]
         public async Task<ActionResult> Post(PostOrderDto orderDto) {
