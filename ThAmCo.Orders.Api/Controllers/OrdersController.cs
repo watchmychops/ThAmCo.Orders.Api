@@ -16,10 +16,19 @@ namespace ThAmCo.Orders.Api.Controllers {
             _orderContext = orderContext;
         }
 
+        /// <summary>
+        ///   Gets all orders with an optional parameter of the status
+        /// </summary>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
         [HttpGet(Name = "GetOrders")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Order>>> Get() {
-            return await _orderContext.Orders.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Order>>> Get([FromQuery] OrderStatus? orderStatus = null) {
+            var orderQuery = _orderContext.Orders.AsQueryable();
+            if (orderStatus.HasValue) {
+                orderQuery = orderQuery.Where(x => x.Status == orderStatus.Value);
+            }
+            return await orderQuery.ToListAsync();
         }
 
         [HttpGet("{id}", Name = "GetOrder")]

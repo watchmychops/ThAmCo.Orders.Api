@@ -36,6 +36,16 @@ namespace ThAmCo.Orders.Api.Tests {
                     OrderDetails = new List<OrderDetail> {
                         new OrderDetail { OrderId = 2, ProductId = 1, Quantity = 5, UnitPrice = 200 }
                     }
+                },
+                new Order {
+                    Id = 3,
+                    CustomerId = 2,
+                    Notes = "Test notes for third test order",
+                    SubmittedDate = DateTime.Now.AddDays(-1),
+                    Status = OrderStatus.Confirmed,
+                    OrderDetails = new List<OrderDetail> {
+                        new OrderDetail { OrderId = 2, ProductId = 1, Quantity = 5, UnitPrice = 200 }
+                    }
                 }
             };
             // Add the orders to the context
@@ -55,6 +65,22 @@ namespace ThAmCo.Orders.Api.Tests {
                 var actionResult = Assert.IsType<ActionResult<IEnumerable<Order>>>(result);
                 var orders = Assert.IsAssignableFrom<IEnumerable<Order>>(actionResult.Value);
                 Assert.Equal(context.Orders.Count(), orders.Count());
+            }
+        }
+
+        [Fact]
+        public async Task GetOrders_WithConfirmedStatus_ReturnsConfirmedOrders() {
+
+            var targetStatus = OrderStatus.Confirmed;
+
+            using (var context = CreateContext()) {
+                var controller = new OrdersController(null, context);
+
+                var result = await controller.Get(targetStatus);
+
+                var actionResult = Assert.IsType<ActionResult<IEnumerable<Order>>>(result);
+                var orders = Assert.IsAssignableFrom<IEnumerable<Order>>(actionResult.Value);
+                Assert.All(orders, order => Assert.Equal(targetStatus, order.Status));
             }
         }
 
