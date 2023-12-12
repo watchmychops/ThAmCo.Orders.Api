@@ -136,6 +136,26 @@ namespace ThAmCo.Orders.Api.Tests {
             }
         }
 
+        [Fact]
+        public async Task PatchOrder_WithConfirmedStatus_UpdatesStatus() {
+
+            var orderId = 1;
+            var confirmedUpdateStatusDto = new UpdateOrderStatusDto { OrderStatus = OrderStatus.Confirmed };
+
+            using (var context = CreateContext()) {
+                var controller = new OrdersController(null, context);
+
+                var result = await controller.UpdateOrderStatus(orderId, confirmedUpdateStatusDto);
+
+                Assert.IsType<NoContentResult>(result);
+                var updatedOrder = context.Orders.Find(orderId);
+                Assert.Equal(OrderStatus.Confirmed, updatedOrder.Status);
+
+            }
+
+
+        }
+
     }
 
 

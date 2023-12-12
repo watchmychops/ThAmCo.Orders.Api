@@ -41,6 +41,22 @@ namespace ThAmCo.Orders.Api.Controllers {
             return order;
         }
 
+        [HttpPatch("{id}/status", Name = "UpdateOrderStatus")]
+        [Authorize]
+        public async Task<ActionResult> UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusDto updateOrderStatusDto) {
+            var order = await _orderContext.FindAsync<Order>(id);
+            if (order == null) {
+                // Return 404 not found
+                return NotFound();
+            }
+
+            order.Status = updateOrderStatusDto.OrderStatus;
+            await _orderContext.SaveChangesAsync();
+
+            // Return 204 No Content
+            return NoContent();
+        }
+
         [HttpPost(Name = "AddOrder")]
         [Authorize]
         public async Task<ActionResult> Post(PostOrderDto orderDto) {

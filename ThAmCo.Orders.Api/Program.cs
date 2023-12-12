@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using ThAmCo.Orders.Api.Data;
 
 namespace ThAmCo.Orders.Api {
@@ -9,7 +10,11 @@ namespace ThAmCo.Orders.Api {
         public static void Main(string[] args) {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            // Allow clients to send string statuses as well as enum values
+            builder.Services.AddControllers()
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
