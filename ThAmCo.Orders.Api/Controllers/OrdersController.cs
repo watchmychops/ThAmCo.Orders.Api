@@ -16,10 +16,19 @@ namespace ThAmCo.Orders.Api.Controllers {
             _orderContext = orderContext;
         }
 
+        /// <summary>
+        ///   Gets all orders with an optional parameter of the status
+        /// </summary>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
         [HttpGet(Name = "GetOrders")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Order>>> Get() {
-            return await _orderContext.Orders.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Order>>> Get([FromQuery] OrderStatus? orderStatus = null) {
+            var orderQuery = _orderContext.Orders.AsQueryable();
+            if (orderStatus.HasValue) {
+                orderQuery = orderQuery.Where(x => x.Status == orderStatus.Value);
+            }
+            return await orderQuery.ToListAsync();
         }
 
         [HttpGet("{id}", Name = "GetOrder")]
@@ -32,7 +41,21 @@ namespace ThAmCo.Orders.Api.Controllers {
             return order;
         }
 
+        [HttpPatch("{id}/status", Name = "UpdateOrderStatus")]
+        [Authorize]
+        public async Task<ActionResult> UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusDto updateOrderStatusDto) {
+            var order = await _orderContext.FindAsync<Order>(id);
+            if (order == null) {
+                // Return 404 not found
+                return NotFound();
+            }
 
+            order.Status = updateOrderStatusDto.OrderStatus;
+            await _orderContext.SaveChangesAsync();
+
+            // Return 204 No Content
+            return NoContent();
+        }
 
         [HttpPost(Name = "AddOrder")]
         public async Task<ActionResult> Post(PostOrderDto orderDto) {
