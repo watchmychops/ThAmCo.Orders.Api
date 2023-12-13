@@ -1,10 +1,9 @@
 name: Build and deploy .NET Core application to Web App thamco-orders-api
 on:
   push:
-    branches:
-    - develop
 env:
-  AZURE_WEBAPP_NAME: thamco-orders-api
+  AZURE_WEBAPP_NAME_DEV: thamco-orders-api
+  AZURE_WEBAPP_NAME_PROD: thamco-orders-api-prod
   AZURE_WEBAPP_PACKAGE_PATH: ThAmCo.Orders.Api\publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 7.0.x
@@ -32,18 +31,35 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-  deploy:
+  deploy-dev:
     runs-on: windows-latest
     needs: build
+    if: github.ref == 'refs/heads/develop'
     steps:
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    - name: Deploy to Azure WebApp
+    - name: Deploy to Development Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        app-name: ${{ env.AZURE_WEBAPP_NAME_DEV }}
         publish-profile: ${{ secrets.thamco_orders_api_FE71 }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  deploy-prod:
+    runs-on: windows-latest
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    - name: Deploy to Development Azure WebApp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME_PROD }}
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PACKAGE_PROD }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
