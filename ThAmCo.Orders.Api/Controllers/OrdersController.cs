@@ -58,13 +58,11 @@ namespace ThAmCo.Orders.Api.Controllers {
         }
 
         [HttpPost(Name = "AddOrder")]
-        [Authorize]
         public async Task<ActionResult> Post(PostOrderDto orderDto) {
             var order = new Order {
                 CustomerId = orderDto.CustomerId,
                 SubmittedDate = orderDto.SubmittedDate,
                 Status = OrderStatus.Pending,
-                Notes = orderDto.Notes,
                 OrderDetails = new List<OrderDetail>()
             };
             foreach (var detail in orderDto.OrderDetails) {
