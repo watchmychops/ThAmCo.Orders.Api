@@ -51,6 +51,23 @@ namespace ThAmCo.Orders.Api.Controllers {
             }
 
             order.Status = updateOrderStatusDto.OrderStatus;
+            order.UpdatedDate = DateTime.Now;
+            await _orderContext.SaveChangesAsync();
+
+            // Return 204 No Content
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/customerId", Name = "UpdateCustomerId")]
+        [Authorize]
+        public async Task<ActionResult> UpdateCustomerId(int id, [FromBody] int customerId) {
+            var order = await _orderContext.FindAsync<Order>(id);
+            if (order == null) {
+                // Return 404 not found
+                return NotFound();
+            }
+
+            order.CustomerId = customerId;
             await _orderContext.SaveChangesAsync();
 
             // Return 204 No Content
