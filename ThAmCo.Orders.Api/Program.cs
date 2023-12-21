@@ -32,11 +32,15 @@ namespace ThAmCo.Orders.Api {
                     var path = Environment.GetFolderPath(folder);
                     var dbPath = Path.Join(path, "orders.db");
                     options.UseSqlite($"Data Source={dbPath}");
+
                     options.EnableDetailedErrors();
                     options.EnableSensitiveDataLogging();
                 } else {
                     var cs = builder.Configuration.GetConnectionString("OrderContext");
-                    options.UseSqlServer(cs);
+                    options.UseSqlServer(cs,
+                        sqlServerOptionsAction: sqlOptions => {
+                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null);
+                        });
                 }
             });
 
