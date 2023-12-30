@@ -15,6 +15,12 @@ namespace ThAmCo.Orders.Api.Data {
                 x.Property(c => c.CustomerId).IsRequired();
                 x.Property(c => c.SubmittedDate).IsRequired();
             });
+
+            builder.Entity<Order>()
+                .HasMany(o => o.OrderDetails)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
