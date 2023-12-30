@@ -2,14 +2,11 @@
 
 #nullable disable
 
-namespace ThAmCo.Orders.Api.Migrations
-{
+namespace ThAmCo.Orders.Api.Migrations {
     /// <inheritdoc />
-    public partial class productsdetailsstatus : Migration
-    {
+    public partial class ProductsDetailsStatus : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<int>(
                 name: "Status",
                 table: "Orders",
@@ -19,15 +16,13 @@ namespace ThAmCo.Orders.Api.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Product",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     DescriptionId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Product_Product_DescriptionId",
@@ -39,8 +34,7 @@ namespace ThAmCo.Orders.Api.Migrations
 
             migrationBuilder.CreateTable(
                 name: "OrderDetails",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -48,8 +42,7 @@ namespace ThAmCo.Orders.Api.Migrations
                     UnitPrice = table.Column<double>(type: "REAL", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_OrderDetails", x => x.Id);
                     table.ForeignKey(
                         name: "FK_OrderDetails_Orders_OrderId",
@@ -82,8 +75,7 @@ namespace ThAmCo.Orders.Api.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "OrderDetails");
 

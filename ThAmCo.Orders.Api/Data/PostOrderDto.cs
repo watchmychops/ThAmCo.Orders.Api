@@ -7,7 +7,7 @@ namespace ThAmCo.Orders.Api {
         public int CustomerId { get; set; }
         [Required]
         public DateTime SubmittedDate { get; set; }
-        public string Notes { get; set; }
+        public string Notes { get; set; } = null!;
         [Required]
         public required List<OrderDetailDto> OrderDetails { get; set; }
     }
