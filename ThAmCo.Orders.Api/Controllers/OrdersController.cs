@@ -24,7 +24,10 @@ namespace ThAmCo.Orders.Api.Controllers {
         [HttpGet(Name = "GetOrders")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<Order>>> Get([FromQuery] OrderStatus? orderStatus = null) {
-            var orderQuery = _orderContext.Orders.Include(x => x.OrderDetails).AsQueryable();
+            var orderQuery = _orderContext.Orders
+                .Include(x => x.OrderDetails)
+                .AsQueryable();
+
             if (orderStatus.HasValue) {
                 orderQuery = orderQuery.Where(x => x.Status == orderStatus.Value);
             }
@@ -35,7 +38,10 @@ namespace ThAmCo.Orders.Api.Controllers {
         [Authorize]
         public async Task<ActionResult<Order>> Get(int id) {
             // Include order details
-            var order = await _orderContext.Orders.Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.Id == id);
+            var order = await _orderContext.Orders
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (order == null) return new NotFoundResult();
 
