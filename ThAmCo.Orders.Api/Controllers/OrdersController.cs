@@ -98,12 +98,5 @@ namespace ThAmCo.Orders.Api.Controllers {
             return new CreatedAtRouteResult("GetOrder", new { id = orderId }, order);
         }
 
-        [HttpDelete(Name = "AddProduct")]
-        public async Task<ActionResult> Product(Product product) {
-            await _orderContext.AddAsync(product);
-            await _orderContext.SaveChangesAsync();
-            return Ok();
-        }
-
     }
 }
