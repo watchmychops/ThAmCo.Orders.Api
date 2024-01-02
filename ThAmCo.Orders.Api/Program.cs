@@ -27,21 +27,21 @@ namespace ThAmCo.Orders.Api {
             builder.Services.AddAuthorization();
 
             builder.Services.AddDbContext<OrderContext>(options => {
-                //if (builder.Environment.IsDevelopment()) {
-                //    var folder = Environment.SpecialFolder.LocalApplicationData;
-                //    var path = Environment.GetFolderPath(folder);
-                //    var dbPath = Path.Join(path, "orders.db");
-                //    options.UseSqlite($"Data Source={dbPath}");
+                if (builder.Environment.IsDevelopment()) {
+                    var folder = Environment.SpecialFolder.LocalApplicationData;
+                    var path = Environment.GetFolderPath(folder);
+                    var dbPath = Path.Join(path, "orders.db");
+                    options.UseSqlite($"Data Source={dbPath}");
 
-                //    options.EnableDetailedErrors();
-                //    options.EnableSensitiveDataLogging();
-                //} else {
-                var cs = builder.Configuration.GetConnectionString("OrderContext");
-                options.UseSqlServer(cs,
-                    sqlServerOptionsAction: sqlOptions => {
-                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null);
-                    });
-                //}
+                    options.EnableDetailedErrors();
+                    options.EnableSensitiveDataLogging();
+                } else {
+                    var cs = builder.Configuration.GetConnectionString("OrderContext");
+                    options.UseSqlServer(cs,
+                        sqlServerOptionsAction: sqlOptions => {
+                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null);
+                        });
+                }
             });
 
             builder.Services.AddSwaggerGen(option => {
