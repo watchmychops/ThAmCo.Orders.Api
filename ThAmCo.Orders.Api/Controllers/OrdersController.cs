@@ -24,7 +24,10 @@ namespace ThAmCo.Orders.Api.Controllers {
         [HttpGet(Name = "GetOrders")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<Order>>> Get([FromQuery] OrderStatus? orderStatus = null) {
-            var orderQuery = _orderContext.Orders.AsQueryable();
+            var orderQuery = _orderContext.Orders
+                .Include(x => x.OrderDetails)
+                .AsQueryable();
+
             if (orderStatus.HasValue) {
                 orderQuery = orderQuery.Where(x => x.Status == orderStatus.Value);
             }
@@ -34,7 +37,11 @@ namespace ThAmCo.Orders.Api.Controllers {
         [HttpGet("{id}", Name = "GetOrder")]
         [Authorize]
         public async Task<ActionResult<Order>> Get(int id) {
-            var order = await _orderContext.FindAsync<Order>(id);
+            // Include order details
+            var order = await _orderContext.Orders
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (order == null) return new NotFoundResult();
 
@@ -51,6 +58,23 @@ namespace ThAmCo.Orders.Api.Controllers {
             }
 
             order.Status = updateOrderStatusDto.OrderStatus;
+            order.UpdatedDate = DateTime.Now;
+            await _orderContext.SaveChangesAsync();
+
+            // Return 204 No Content
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/customerId", Name = "UpdateCustomerId")]
+        [Authorize]
+        public async Task<ActionResult> UpdateCustomerId(int id, [FromBody] int customerId) {
+            var order = await _orderContext.FindAsync<Order>(id);
+            if (order == null) {
+                // Return 404 not found
+                return NotFound();
+            }
+
+            order.CustomerId = customerId;
             await _orderContext.SaveChangesAsync();
 
             // Return 204 No Content

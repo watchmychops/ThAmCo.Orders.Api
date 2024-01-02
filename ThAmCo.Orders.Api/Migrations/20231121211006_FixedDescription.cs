@@ -2,17 +2,11 @@
 
 #nullable disable
 
-namespace ThAmCo.Orders.Api.Migrations
-{
+namespace ThAmCo.Orders.Api.Migrations {
     /// <inheritdoc />
-    public partial class FixedDescription : Migration
-    {
+    public partial class FixedDescription : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Product_Product_DescriptionId",
-                table: "Product");
+        protected override void Up(MigrationBuilder migrationBuilder) {
 
             migrationBuilder.DropIndex(
                 name: "IX_Product_DescriptionId",
@@ -31,8 +25,7 @@ namespace ThAmCo.Orders.Api.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropColumn(
                 name: "Description",
                 table: "Product");
@@ -49,13 +42,6 @@ namespace ThAmCo.Orders.Api.Migrations
                 table: "Product",
                 column: "DescriptionId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Product_Product_DescriptionId",
-                table: "Product",
-                column: "DescriptionId",
-                principalTable: "Product",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
     }
 }

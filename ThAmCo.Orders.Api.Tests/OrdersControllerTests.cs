@@ -60,7 +60,8 @@ namespace ThAmCo.Orders.Api.Tests {
         [Fact]
         public async Task GetOrders_ReturnsAllOrders() {
             using (var context = CreateContext()) {
-                var controller = new OrdersController(null, context);
+                var mockLogger = new Mock<ILogger<OrdersController>>();
+                var controller = new OrdersController(mockLogger.Object, context);
 
                 var result = await controller.Get();
 
@@ -76,7 +77,8 @@ namespace ThAmCo.Orders.Api.Tests {
             var targetStatus = OrderStatus.Confirmed;
 
             using (var context = CreateContext()) {
-                var controller = new OrdersController(null, context);
+                var mockLogger = new Mock<ILogger<OrdersController>>();
+                var controller = new OrdersController(mockLogger.Object, context);
 
                 var result = await controller.Get(targetStatus);
 
@@ -91,7 +93,8 @@ namespace ThAmCo.Orders.Api.Tests {
             var testId = 1;
 
             using (var context = CreateContext()) {
-                var controller = new OrdersController(null, context);
+                var mockLogger = new Mock<ILogger<OrdersController>>();
+                var controller = new OrdersController(mockLogger.Object, context);
 
                 var result = await controller.Get(testId);
 
@@ -107,7 +110,8 @@ namespace ThAmCo.Orders.Api.Tests {
             var testId = -1;
 
             using (var context = CreateContext()) {
-                var controller = new OrdersController(null, context);
+                var mockLogger = new Mock<ILogger<OrdersController>>();
+                var controller = new OrdersController(mockLogger.Object, context);
 
                 var result = await controller.Get(testId);
 
@@ -123,12 +127,13 @@ namespace ThAmCo.Orders.Api.Tests {
                 Notes = "Test notes for adding a new order",
                 SubmittedDate = DateTime.Now,
                 OrderDetails = new() {
-                    new() { OrderId = 3, ProductId = 10, Quantity = 100, UnitPrice = 10.12 }
+                    new() { OrderId = 3, ProductId = 10, Quantity = 100, UnitPrice = 10.12m }
                 }
             };
 
             using (var context = CreateContext()) {
-                var controller = new OrdersController(null, context);
+                var mockLogger = new Mock<ILogger<OrdersController>>();
+                var controller = new OrdersController(mockLogger.Object, context);
 
                 var result = await controller.Post(newOrderDto);
 
@@ -145,13 +150,14 @@ namespace ThAmCo.Orders.Api.Tests {
             var confirmedUpdateStatusDto = new UpdateOrderStatusDto { OrderStatus = OrderStatus.Confirmed };
 
             using (var context = CreateContext()) {
-                var controller = new OrdersController(null, context);
+                var mockLogger = new Mock<ILogger<OrdersController>>();
+                var controller = new OrdersController(mockLogger.Object, context);
 
                 var result = await controller.UpdateOrderStatus(orderId, confirmedUpdateStatusDto);
 
                 Assert.IsType<NoContentResult>(result);
                 var updatedOrder = context.Orders.Find(orderId);
-                Assert.Equal(OrderStatus.Confirmed, updatedOrder.Status);
+                Assert.Equal(OrderStatus.Confirmed, updatedOrder?.Status);
 
             }
 

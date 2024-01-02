@@ -30,7 +30,7 @@ namespace ThAmCo.Orders.Api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("SubmittedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("Datetime");
 
                     b.HasKey("Id");
 

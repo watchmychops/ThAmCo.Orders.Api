@@ -11,8 +11,8 @@ using ThAmCo.Orders.Api.Data;
 namespace ThAmCo.Orders.Api.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20231119161103_products-details-status")]
-    partial class productsdetailsstatus
+    [Migration("20231119161103_ProductsDetailsStatus")]
+    partial class ProductsDetailsStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
