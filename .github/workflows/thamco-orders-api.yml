@@ -1,6 +1,9 @@
 name: Build and deploy .NET Core application to Web App thamco-orders-api
 on:
   push:
+    branches:
+      - master
+      - develop
 env:
   AZURE_WEBAPP_NAME_DEV: thamco-orders-api
   AZURE_WEBAPP_NAME_PROD: thamco-orders-api-prod
