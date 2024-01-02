@@ -17,19 +17,12 @@ namespace ThAmCo.Orders.Api.Migrations {
             migrationBuilder.CreateTable(
                 name: "Product",
                 columns: table => new {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     DescriptionId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_Product", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Product_Product_DescriptionId",
-                        column: x => x.DescriptionId,
-                        principalTable: "Product",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,7 +32,7 @@ namespace ThAmCo.Orders.Api.Migrations {
                         .Annotation("Sqlite:Autoincrement", true),
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UnitPrice = table.Column<double>(type: "REAL", nullable: false),
+                    UnitPrice = table.Column<double>(type: "DECIMAL(18,2)", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table => {

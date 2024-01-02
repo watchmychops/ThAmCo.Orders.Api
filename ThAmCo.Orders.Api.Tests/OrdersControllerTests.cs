@@ -127,7 +127,7 @@ namespace ThAmCo.Orders.Api.Tests {
                 Notes = "Test notes for adding a new order",
                 SubmittedDate = DateTime.Now,
                 OrderDetails = new() {
-                    new() { OrderId = 3, ProductId = 10, Quantity = 100, UnitPrice = 10.12 }
+                    new() { OrderId = 3, ProductId = 10, Quantity = 100, UnitPrice = 10.12m }
                 }
             };
 
